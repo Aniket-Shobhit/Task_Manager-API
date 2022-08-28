@@ -109,8 +109,11 @@ router.delete('/tasks/:id', auth, async (req,res) => {
         if(!task) {
             res.status(404).send();
         }
-        res.send(task);
+        else {
+            res.send(task);
+        }
     } catch(e) {
+        console.log(e);
         res.status(400).send(e);
     }
 });

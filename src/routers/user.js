@@ -133,25 +133,27 @@ router.post('/users/me/avatar', auth, upload.single('avatar'), async (req,res) =
     res.status(400).send({ error:error.message });
 });
 
-router.patch('/users/:id', auth, async (req,res) => {                                             //user should not be able to update other user info with their id
+router.patch('/users/me', auth, async (req,res) => {                                             //user should not be able to update other user info with their id
     const updates = Object.keys(req.body);                                                  //returns all the keys of the object as array
     const allowedUpdates = ['name','email','age','password'];
     const isValidOperation = updates.every( update => allowedUpdates.includes(update) );
     if(!isValidOperation) {
         res.status(400).send({error: 'Invalid updates!'});
     }
-    try {
-        //const user = await User.findById(req.params.id);                                      //middleware function auth is used so req.user contains the user that is logged in i.e. autorized                               
-        updates.forEach((update) => req.user[update] = req.body[update] );
-        await req.user.save();
-        //const user = await User.findByIdAndUpdate(req.params.id,req.body,{ new:true, runValidators: true });          
-        //this method should not be used as it bypasses the mongoose model
-        // if(!user) {                                                                          //since user is taken from the database who is currently logged in so they obviously exist so no need to check for unavailaibility of user
-        //     res.status(404).send();
-        // }
-        res.send(req.user);
-    } catch(e) {
-        res.status(400).send(e);
+    else {
+        try {
+            //const user = await User.findById(req.params.id);                                      //middleware function auth is used so req.user contains the user that is logged in i.e. autorized                               
+            updates.forEach((update) => req.user[update] = req.body[update] );
+            await req.user.save();
+            //const user = await User.findByIdAndUpdate(req.params.id,req.body,{ new:true, runValidators: true });          
+            //this method should not be used as it bypasses the mongoose model
+            // if(!user) {                                                                          //since user is taken from the database who is currently logged in so they obviously exist so no need to check for unavailaibility of user
+            //     res.status(404).send();
+            // }
+            res.send(req.user);
+        } catch(e) {
+            res.status(400).send(e);
+        }
     }
 });
 

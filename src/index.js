@@ -1,17 +1,14 @@
-const express = require('express');
-const Task = require('./models/task');
-require('./db/mongoose');
-const User = require('./models/user');
-const userRouter = require('./routers/user');
-const taskRouter = require('./routers/task');
-const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 
-const app = express();
-const port = process.env.PORT | 3000;
+const envPath = `./config/.env.${process.env.NODE_ENV}`;
+dotenv.config({path: envPath})
 
-app.use(express.json());
-app.use(userRouter);
-app.use(taskRouter);
+const app = require('./app');
+const port = process.env.PORT;
+
+app.listen(port, () => {
+    console.log('Server is up on port ' + process.env.PORT);
+});
 
 // const multer = require('multer');
 
@@ -57,9 +54,6 @@ app.use(taskRouter);
 //Without middleware =  send request -> new route handler
 //With middleware = send request -> do something -> new route handler
 
-app.listen(port, () => {
-    console.log('Server is up on port ' + port);
-});
 
 // const bcrypt = require('bcryptjs');
 

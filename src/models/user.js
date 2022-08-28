@@ -73,7 +73,7 @@ userSchema.methods.toJSON = function() {                                        
 }
 userSchema.methods.generateAuthToken = async function() {                           //methods is used for an instance that is on a single user, we can use this using user.function_name
     const user = this;
-    const token = jwt.sign({ _id: user._id.toString()}, 'thisisthetoken');
+    const token = jwt.sign({ _id: user._id.toString()}, process.env.JWT);
     user.tokens = user.tokens.concat({ token });
     await user.save();
     return token;

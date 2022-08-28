@@ -4,8 +4,8 @@ const User = require('../models/user');
 const auth = async (req,res,next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
-        const decoded = jwt.verify(token, 'thisisthetoken');
-        const user = await User.findOne({ id: decoded._id, 'tokens.token': token });
+        const decoded = jwt.verify(token, process.env.JWT);
+        const user = await User.findOne({ id: decoded._id, 'tokens.token': token });            //search the user that has the _id and one of the elements(token) in the tokens array has the token initialized above
 
         if(!user) {
             throw new Error();
